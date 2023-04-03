@@ -13,7 +13,7 @@ export default class Tasks extends Model {
           },
         },
       },
-      deliveryDate: {
+      delivery_date: {
         type: Sequelize.STRING,
       },
       status: {

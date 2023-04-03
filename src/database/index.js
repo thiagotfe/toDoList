@@ -1,10 +1,8 @@
 import Sequelize from 'sequelize';
 import databaseConfig from '../config/database';
-import Aluno from '../models/Tasks';
-import User from '../models/User';
-import Foto from '../models/Foto';
+import Tasks from '../models/Tasks';
 
-const models = [Aluno, User, Foto];
+const models = [Tasks];
 
 const connection = new Sequelize(databaseConfig);
 

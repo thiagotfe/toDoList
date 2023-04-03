@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { resolve } from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 
@@ -7,7 +6,7 @@ dotenv.config();
 
 import './database';
 import express from 'express';
-import alunoRoutes from './routes/alunoRoutes';
+import tasksRoutes from './routes/tasksRoutes';
 
 const corsOptions = {
   origin: '*'
@@ -28,7 +27,7 @@ class App {
   }
 
   routes() {
-    this.app.use('/alunos', alunoRoutes);
+    this.app.use('/tasks', tasksRoutes);
   }
 }
 

@@ -1,21 +1,24 @@
-import Aluno from '../models/Tasks';
+// eslint-disable-next-line no-unused-vars
+import { get } from 'lodash';
+import Tasks from '../models/Tasks';
 
-class AlunoController {
+class TasksController {
   async index(req, res) {
-    const alunos = await Aluno.findAll({
-      attributes: ['id', 'nome', 'sobrenome', 'email', 'idade', 'peso', 'altura'],
-      order: [['id', 'DESC'], [Foto, 'id', 'DESC']],
-      include: {
-        model: Foto,
-        attributes: ['url', 'filename'],
-      },
-    });
-    res.json(alunos);
+    try {
+      const tasks = await Tasks.findAll();
+      return res.json(tasks);
+    } catch (e) {
+      const eToMap = get(e, 'errors', { message: 'Unkown error' });
+      return res.status(400).json({
+        errors: eToMap.map((err) => err.message),
+      });
+    }
   }
 
+  /*
   async store(req, res) {
     try {
-      const aluno = await Aluno.create(req.body);
+      const aluno = await Tasks.create(req.body);
       return res.json(aluno);
     } catch (e) {
       return res.status(400).json({
@@ -102,6 +105,7 @@ class AlunoController {
       });
     }
   }
+  */
 }
 
-export default new AlunoController();
+export default new TasksController();
