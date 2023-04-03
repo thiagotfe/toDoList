@@ -24,8 +24,7 @@ class TasksController {
           errors: ['Status or delivery_date enableds in update route'],
         });
       }
-
-      const task = await Tasks.create(name);
+      const task = await Tasks.create({ name });
       return res.json(task);
     } catch (e) {
       const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
@@ -140,7 +139,6 @@ class TasksController {
       const updateTask = await task.update(toEdit);
       return res.json(updateTask);
     } catch (e) {
-      console.log(e);
       const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
@@ -148,33 +146,33 @@ class TasksController {
     }
   }
 
-  /*
   async delete(req, res) {
     try {
       const { id } = req.params;
       if (!id) {
         return res.status(400).json({
-          errors: ['Faltando id'],
+          errors: ['Missing ID parameter'],
         });
       }
-      const aluno = await Aluno.findByPk(id);
-      if (!aluno) {
+      const task = await Tasks.findByPk(id);
+      if (!task) {
         return res.status(400).json({
-          errors: ['Aluno não existe'],
+          errors: ['Task not exists'],
         });
       }
 
-      await aluno.destroy();
+      const { name } = task;
+      await task.destroy();
       return res.json({
-        apagado: true,
+        deleted: { id, name },
       });
     } catch (e) {
+      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
       return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
+        errors: eToMap.map((err) => err.message),
       });
     }
   }
-  */
 }
 
 export default new TasksController();
