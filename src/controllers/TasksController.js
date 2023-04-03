@@ -27,36 +27,30 @@ class TasksController {
     }
   }
 
-  /*
   async show(req, res) {
     try {
       const { id } = req.params;
       if (!id) {
         return res.status(400).json({
-          errors: ['Faltando id'],
+          errors: ['Missing ID parameter'],
         });
       }
-      const aluno = await Aluno.findByPk(id, {
-        attributes: ['id', 'nome', 'sobrenome', 'email', 'idade', 'peso', 'altura'],
-        order: [['id', 'DESC'], [Foto, 'id', 'DESC']],
-        include: {
-          model: Foto,
-          attributes: ['url', 'filename'],
-        },
-      });
-      if (!aluno) {
+      const task = await Tasks.findByPk(id);
+      if (!task) {
         return res.status(400).json({
-          errors: ['Aluno não existe'],
+          errors: ['Task not exists'],
         });
       }
-      return res.json(aluno);
+      return res.json(task);
     } catch (e) {
+      const eToMap = get(e, 'errors', { message: 'Unkown error' });
       return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
+        errors: eToMap.map((err) => err.message),
       });
     }
   }
 
+  /*
   async update(req, res) {
     try {
       const { id } = req.params;
