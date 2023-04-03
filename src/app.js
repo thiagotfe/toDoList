@@ -7,11 +7,7 @@ dotenv.config();
 
 import './database';
 import express from 'express';
-import homeRoutes from './routes/homeRoutes';
-import userRoutes from './routes/userRoutes';
-import tokenRoutes from './routes/tokenRoutes';
 import alunoRoutes from './routes/alunoRoutes';
-import fotoRoutes from './routes/fotoRoutes';
 
 const corsOptions = {
   origin: '*'
@@ -29,15 +25,10 @@ class App {
     this.app.use(helmet({crossOriginEmbedderPolicy: false}));
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
-    this.app.use(express.static(resolve(__dirname, 'uploads')));
   }
 
   routes() {
-    this.app.use('/', homeRoutes);
-    this.app.use('/users', userRoutes);
-    this.app.use('/tokens', tokenRoutes);
     this.app.use('/alunos', alunoRoutes);
-    this.app.use('/fotos', fotoRoutes);
   }
 }
 

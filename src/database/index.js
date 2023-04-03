@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import databaseConfig from '../config/database';
-import Aluno from '../models/Aluno';
+import Aluno from '../models/Tasks';
 import User from '../models/User';
 import Foto from '../models/Foto';
 

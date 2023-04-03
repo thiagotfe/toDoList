@@ -1,30 +1,24 @@
 /* eslint-disable no-unused-vars */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('fotos', {
+    await queryInterface.createTable('tasks', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      originalname: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      filename: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      aluno_id: {
-        type: Sequelize.INTEGER,
+      deliveryDate: {
+        type: Sequelize.DATE,
         allowNull: true,
-        references: {
-          model: 'alunos',
-          key: 'id',
-        },
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -38,6 +32,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('fotos');
+    await queryInterface.dropTable('tasks');
   },
 };

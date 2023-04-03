@@ -1,5 +1,4 @@
-import Aluno from '../models/Aluno';
-import Foto from '../models/Foto';
+import Aluno from '../models/Tasks';
 
 class AlunoController {
   async index(req, res) {
