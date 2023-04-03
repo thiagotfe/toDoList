@@ -15,18 +15,19 @@ class TasksController {
     }
   }
 
-  /*
   async store(req, res) {
     try {
-      const aluno = await Tasks.create(req.body);
-      return res.json(aluno);
+      const task = await Tasks.create(req.body);
+      return res.json(task);
     } catch (e) {
+      const eToMap = get(e, 'errors', { message: 'Unkown error' });
       return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
+        errors: eToMap.map((err) => err.message),
       });
     }
   }
 
+  /*
   async show(req, res) {
     try {
       const { id } = req.params;
