@@ -1,13 +1,14 @@
-#To-Do List
+# To-Do List
 
-##API developed in Node to create and manage tasks.
+**API developed in Node to create and manage tasks.**
 
-###ROUTES
-
-####CREATE
+## CREATE
 **Description:** Create tasks.
+
 **Url:** `/tasks/`
+
 **Method:** `POST`
+
 **Body (JSON)**:
 ```
 {
@@ -15,8 +16,9 @@
 }
 ```
 
-####Success Response:
+### Success Response:
 **Code:** `200`
+
 **Content Example:**
 ```
 {
@@ -25,8 +27,9 @@
 }
 ```
 
-####Error Responses
+### Error Responses:
 **Code**: `400`
+
 **Conditions:**
 - When passing `status` or `delivery_date`
 - When something unexpected happens
@@ -40,13 +43,16 @@
 }
 ```
 
-####LIST
+## LIST
 **Description:** List tasks.
+
 **Url:** `/tasks/`
+
 **Method:** `GET`
 
-####Success Response:
+### Success Response:
 **Code:** `200`
+
 **Content example:**
 ```
 [
@@ -65,8 +71,9 @@
 ]
 ```
 
-####Error Responses
+### Error Responses:
 **Code:** `400`
+
 **Conditions:**
 - When something unexpected happens
 
@@ -79,13 +86,16 @@
 }
 ```
 
-####SHOW
+## SHOW
 **Description:** Show a task by `ID`.
+
 **Url:** `/tasks/:id`
+
 **Method:** `GET`
 
-####Success Response:
+### Success Response:
 **Code:** `200`
+
 **Content example:**
 ```
 {
@@ -95,8 +105,9 @@
 	"delivery_date": "2023-04-04T03:00:00.000Z"
 }
 ```
-####Error Responses
+### Error Responses:
 **Code:** 400
+
 **Conditions:**
 - Task does not exist
 - When something unexpected happens
@@ -110,10 +121,13 @@
 }
 ```
 
-####UPDATE
+## UPDATE
 **Description:** Updates a task by `ID` and submitted parameters.
+
 **Url:** `/tasks/:id`
+
 **Method:** `PUT`
+
 **Body (JSON):**
 
 Exemple 1
@@ -141,8 +155,9 @@ Example 3
 }
 ```
 
-####Success Response:
+### Success Response:
 **Code:** `200`
+
 **Content example:**
 ```
 {
@@ -150,8 +165,9 @@ Example 3
 }
 ```
 
-####Error Responses
+### Error Responses:
 **Code:** `400`
+
 **Conditions:**
 - Task `ID` is missing
 - Task does not exist
@@ -163,7 +179,8 @@ Example 3
 - `delivery_date.day` must be integer, between 1 and 31
 - `delivery_date` cannot be in the past
 - When something unexpected happens
-Content example
+
+**Content Example:**
 ```
 {
 	"errors": [
@@ -172,13 +189,16 @@ Content example
 }
 ```
 
-####DELETE
+## DELETE
 **Description:** Delete a task by `ID`.
+
 **Url:** `/tasks/:id`
+
 **Method:** `DELETE`
 
-####Success Response:
+### Success Response:
 **Code:** `200`
+
 **Content example:**
 ```
 {
@@ -186,12 +206,15 @@ Content example
 }
 ```
 
-####Error Responses
+### Error Responses:
 **Code:** `400`
+
 **Conditions:**
 - Task `ID` is missing
 - Task does not exist
 - When something unexpected happens
+
+**Content Example:**
 ```
 {
 	"errors": [
