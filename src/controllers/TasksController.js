@@ -5,10 +5,13 @@ import Tasks from '../models/Tasks';
 class TasksController {
   async index(req, res) {
     try {
-      const tasks = await Tasks.findAll();
+      const tasks = await Tasks.findAll({
+        attributes: { exclude: ['created_at', 'updated_at'] },
+        order: [['id', 'ASC']],
+      });
       return res.json(tasks);
     } catch (e) {
-      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
+      const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
       });
@@ -21,13 +24,14 @@ class TasksController {
 
       if (status || delivery_date) {
         return res.status(400).json({
-          errors: ['Status or delivery_date enableds in update route'],
+          errors: ['Parameters status and delivery_date valid only in update route'],
         });
       }
       const task = await Tasks.create({ name });
-      return res.json(task);
+      const { id } = task;
+      return res.json({ id, name });
     } catch (e) {
-      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
+      const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
       });
@@ -39,18 +43,23 @@ class TasksController {
       const { id } = req.params;
       if (!id) {
         return res.status(400).json({
-          errors: ['Missing ID parameter'],
+          errors: ['Task ID is missing'],
         });
       }
       const task = await Tasks.findByPk(id);
       if (!task) {
         return res.status(400).json({
-          errors: ['Task not exists'],
+          errors: ['Task does not exist'],
         });
       }
-      return res.json(task);
+
+      const { name, delivery_date, status } = task;
+
+      return res.json({
+        id, name, status, delivery_date,
+      });
     } catch (e) {
-      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
+      const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
       });
@@ -62,13 +71,13 @@ class TasksController {
       const { id } = req.params;
       if (!id) {
         return res.status(400).json({
-          errors: ['Missing ID parameter'],
+          errors: ['Task ID is missing'],
         });
       }
       const task = await Tasks.findByPk(id);
       if (!task) {
         return res.status(400).json({
-          errors: ['Task not exists'],
+          errors: ['Task does not exist'],
         });
       }
 
@@ -88,7 +97,7 @@ class TasksController {
           toEdit.status = status;
         } else {
           return res.status(400).json({
-            errors: ['Status can be 0 (pending), 1 (progessing), 2 (finished)'],
+            errors: ['status can be 0 (pending) or 1 (in progress) or 2 (finished)'],
           });
         }
       }
@@ -99,26 +108,26 @@ class TasksController {
         // Check if exists
         if (!year || !month || !day) {
           return res.status(400).json({
-            errors: ['delivery_date can be an dict with year, month and day'],
+            errors: ['delivery_date must be a dict with year, month and day'],
           });
         }
 
         // Check if are valids
         if (!Number.isInteger(year)) {
           return res.status(400).json({
-            errors: ['delivery_date\'s year not valid'],
+            errors: ['delivery_date.year must be integer'],
           });
         }
 
         if (!Number.isInteger(month) || month < 1 || month > 12) {
           return res.status(400).json({
-            errors: ['delivery_date\'s month not valid'],
+            errors: ['delivery_date.month must be integer, between 1 (January) and 12 (December)'],
           });
         }
 
         if (!Number.isInteger(day) || day < 1 || day > 31) {
           return res.status(400).json({
-            errors: ['delivery_date\'s day not valid'],
+            errors: ['delivery_date.day must be integer, between 1 and 31'],
           });
         }
         const aux_delivery_date = new Date(year, month - 1, day);
@@ -129,17 +138,19 @@ class TasksController {
 
         if (aux_delivery_date <= now) {
           return res.status(400).json({
-            errors: ['Insert a valid dalivery_date'],
+            errors: ['delivery_date cannot be in the past'],
           });
         }
 
         toEdit.delivery_date = `${aux_delivery_date.getFullYear()}-${aux_delivery_date.getMonth() + 1}-${aux_delivery_date.getDate()}`;
       }
 
-      const updateTask = await task.update(toEdit);
-      return res.json(updateTask);
+      await task.update(toEdit);
+
+      return res.json({ updated_task: id });
     } catch (e) {
-      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
+      console.log(e);
+      const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
       });
@@ -151,23 +162,20 @@ class TasksController {
       const { id } = req.params;
       if (!id) {
         return res.status(400).json({
-          errors: ['Missing ID parameter'],
+          errors: ['Task ID is missing'],
         });
       }
       const task = await Tasks.findByPk(id);
       if (!task) {
         return res.status(400).json({
-          errors: ['Task not exists'],
+          errors: ['Task does not exist'],
         });
       }
 
-      const { name } = task;
       await task.destroy();
-      return res.json({
-        deleted: { id, name },
-      });
+      return res.json({ deleted_task: id });
     } catch (e) {
-      const eToMap = get(e, 'errors', [{ message: 'Unkown error' }]);
+      const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
       });
