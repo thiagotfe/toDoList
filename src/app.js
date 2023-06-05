@@ -9,8 +9,8 @@ import express from 'express';
 import tasksRoutes from './routes/tasksRoutes';
 
 const corsOptions = {
-  origin: '*'
-}
+  origin: '*',
+};
 
 class App {
   constructor() {
@@ -21,7 +21,7 @@ class App {
 
   middlewares() {
     this.app.use(cors(corsOptions));
-    this.app.use(helmet({crossOriginEmbedderPolicy: false}));
+    this.app.use(helmet({ crossOriginEmbedderPolicy: false }));
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
   }
