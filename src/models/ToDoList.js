@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-export default class Tasks extends Model {
+export default class ToDoList extends Model {
   static init(sequelize) {
     super.init({
       name: {
@@ -9,12 +9,12 @@ export default class Tasks extends Model {
         validate: {
           len: {
             args: [3, 255],
-            msg: "Task's name must be between 3 and 255 caracters",
+            msg: "ToDoList's name must be between 3 and 255 caracters",
           },
         },
       },
       delivery_date: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATEONLY,
       },
       status: {
         type: Sequelize.INTEGER,
