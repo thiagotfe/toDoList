@@ -6,7 +6,8 @@ dotenv.config();
 
 import './database';
 import express from 'express';
-import tasksRoutes from './routes/tasksRoutes';
+// import tasksRoutes from './routes/tasksRoutes';
+import toDoListRoutes from './routes/toDoListRoutes';
 
 const corsOptions = {
   origin: '*',
@@ -27,7 +28,7 @@ class App {
   }
 
   routes() {
-    this.app.use('/tasks', tasksRoutes);
+    this.app.use('/toDoList', toDoListRoutes);
   }
 }
 
