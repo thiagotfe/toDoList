@@ -30,4 +30,8 @@ export default class ToDoList extends Model {
     });
     return this;
   }
+
+  static associate(models) {
+    this.hasMany(models.Task, { foreignKey: 'to_do_list_id' });
+  }
 }

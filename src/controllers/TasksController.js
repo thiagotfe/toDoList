@@ -1,8 +1,10 @@
 /* eslint-disable prefer-const */
 import { get } from 'lodash';
-import Tasks from '../models/Tasks';
+import Tasks from '../models/Task';
+import ToDoList from '../models/ToDoList';
 
 class TasksController {
+  /*
   async index(req, res) {
     try {
       const tasks = await Tasks.findAll({
@@ -16,20 +18,29 @@ class TasksController {
         errors: eToMap.map((err) => err.message),
       });
     }
-  }
+  } */
 
   async store(req, res) {
     try {
-      const { name, status, delivery_date } = req.body;
+      const { name, status, to_do_list_id } = req.body;
 
-      if (status || delivery_date) {
+      if (!name || !to_do_list_id) {
         return res.status(400).json({
-          errors: ['Parameters status and delivery_date valid only in update route'],
+          errors: ['Task must be name and to_do_list_id'],
         });
       }
-      const task = await Tasks.create({ name });
+      const toDoList = await ToDoList.findByPk(to_do_list_id);
+
+      if (!toDoList) {
+        return res.status(400).json({
+          errors: ['ToDoList not exists'],
+        });
+      }
+
+      const pass_status = status || 0;
+      const task = await Tasks.create({ to_do_list_id, name, status: pass_status });
       const { id } = task;
-      return res.json({ id, name });
+      return res.json({ id });
     } catch (e) {
       const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
@@ -38,7 +49,7 @@ class TasksController {
     }
   }
 
-  async show(req, res) {
+  /* async show(req, res) {
     try {
       const { id } = req.params;
       if (!id) {
@@ -64,7 +75,7 @@ class TasksController {
         errors: eToMap.map((err) => err.message),
       });
     }
-  }
+  } */
 
   async update(req, res) {
     try {
@@ -82,7 +93,7 @@ class TasksController {
       }
 
       const toEdit = {};
-      const { name, status, delivery_date } = req.body;
+      const { name, status } = req.body;
 
       if (name) toEdit.name = name;
 
@@ -100,49 +111,6 @@ class TasksController {
             errors: ['status can be 0 (pending) or 1 (in progress) or 2 (finished)'],
           });
         }
-      }
-
-      if (delivery_date) {
-        const { year, month, day } = delivery_date;
-
-        // Check if exists
-        if (!year || !month || !day) {
-          return res.status(400).json({
-            errors: ['delivery_date must be a dict with year, month and day'],
-          });
-        }
-
-        // Check if are valids
-        if (!Number.isInteger(year)) {
-          return res.status(400).json({
-            errors: ['delivery_date.year must be integer'],
-          });
-        }
-
-        if (!Number.isInteger(month) || month < 1 || month > 12) {
-          return res.status(400).json({
-            errors: ['delivery_date.month must be integer, between 1 (January) and 12 (December)'],
-          });
-        }
-
-        if (!Number.isInteger(day) || day < 1 || day > 31) {
-          return res.status(400).json({
-            errors: ['delivery_date.day must be integer, between 1 and 31'],
-          });
-        }
-        const aux_delivery_date = new Date(year, month - 1, day);
-
-        let now = new Date();
-
-        now.setDate(now.getDate() - 1);
-
-        if (aux_delivery_date <= now) {
-          return res.status(400).json({
-            errors: ['delivery_date cannot be in the past'],
-          });
-        }
-
-        toEdit.delivery_date = `${aux_delivery_date.getFullYear()}-${aux_delivery_date.getMonth() + 1}-${aux_delivery_date.getDate()}`;
       }
 
       await task.update(toEdit);

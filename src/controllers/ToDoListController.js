@@ -1,6 +1,7 @@
 /* eslint-disable prefer-const */
 import { get } from 'lodash';
 import ToDoList from '../models/ToDoList';
+import Task from '../models/Task';
 
 class ToDoListController {
   async index(req, res) {
@@ -8,9 +9,14 @@ class ToDoListController {
       const toDoLists = await ToDoList.findAll({
         attributes: { exclude: ['created_at', 'updated_at'] },
         order: [['id', 'ASC']],
+        include: {
+          model: Task,
+        },
       });
+
       return res.json(toDoLists);
     } catch (e) {
+      console.log(e);
       const eToMap = get(e, 'errors', [{ message: 'Unknown error' }]);
       return res.status(400).json({
         errors: eToMap.map((err) => err.message),
